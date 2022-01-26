@@ -7,8 +7,10 @@ import {
   TextInput,
   View,
   Button,
+  Alert,
 } from "react-native";
 
+import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
 function Screen1({ submitForm, productsText, name }) {
   const navigation = useNavigation();
@@ -19,12 +21,25 @@ function Screen1({ submitForm, productsText, name }) {
   const [cantitate, setCantitate] = useState("");
   const [discount, setDiscount] = useState("");
 
+  const createAlertAdd = () => {
+    Alert.alert("Adauga Element", "Adauga element in lista", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Button
           title="Go to Screen2 "
-          onPress={() => navigation.navigate("Screen2")}
+          onPress={() => {
+            navigation.navigate("Screen2");
+          }}
         ></Button>
 
         <View>
@@ -62,6 +77,7 @@ function Screen1({ submitForm, productsText, name }) {
             title="ADAUGA PRODUS"
             onPress={() => {
               submitForm(nume, tip, cantitate, pret, discount);
+              createAlertAdd();
             }}
           ></Button>
         </View>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import { StyleSheet, Text, View } from "react-native";
 
+import Toast from "react-native-toast-message";
+
 import Screen1 from "./components/Screen1";
 import Screen2 from "./components/Screen2";
 
@@ -24,6 +26,28 @@ export default function App() {
   const [productsText, setProductsText] = useState([]);
   const [produsAdaugatSesiune, setProdusAdaugatSesiune] = useState(0);
 
+  const createAlertGetError = () => {
+    Alert.alert("Error Get", "Eroare get request", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
+  };
+
+  const createAlertPostError = () => {
+    Alert.alert("Error Post", "Eroare post request", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]);
+  };
+
   const getProducts = async () => {
     try {
       let res = await axios.get("http://192.168.100.6:2025/products");
@@ -38,9 +62,12 @@ export default function App() {
         );
       });
       setProductsText(arr);
+      console.log("am facut GET REQUEST ");
       // console.log(res.data);
     } catch (err) {
+      console.log("err GET REQUEST");
       console.log(err);
+      createAlertGetError();
     }
   };
 
@@ -59,7 +86,7 @@ export default function App() {
         }
       });
 
-      console.log("sss");
+      console.log("am facut GET REQUEST ");
       console.log(tip_pret_ieftin);
       let arr = [];
       for (const key in tip_pret_ieftin) {
@@ -71,6 +98,7 @@ export default function App() {
       }
       setProductsFilter(arr);
     } catch (err) {
+      console.log("err GET REQUEST");
       console.log(err);
     }
   };
@@ -90,14 +118,15 @@ export default function App() {
       });
 
       console.log(res.data);
-      console.log("success");
+      console.log("success POST REQUEST");
 
       let total_Adaugate_sesiune = produsAdaugatSesiune;
       total_Adaugate_sesiune += 1;
       setProdusAdaugatSesiune(total_Adaugate_sesiune);
     } catch (err) {
-      console.log("errr");
+      console.log("errr POST REQUEST");
       console.log(err);
+      createAlertPostError();
     }
   };
 
@@ -133,7 +162,6 @@ export default function App() {
 
   const addAsset = (item) => {
     let ok = 0;
-
     db.transaction(
       (tx) => {
         tx.executeSql(
@@ -150,11 +178,11 @@ export default function App() {
     // get_elements_from_db()
   };
 
-  // useEffect(() => {
-  //   console.log(db);
-  //   createTable();
-  //   get_elements_from_db();
-  // }, []);
+  useEffect(() => {
+    console.log(db);
+    createTable();
+    get_elements_from_db();
+  }, []);
 
   useEffect(() => {
     getProducts();
